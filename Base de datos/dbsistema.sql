@@ -10,7 +10,7 @@ CREATE TABLE usuarios (
     Nombre VARCHAR(100) NOT NULL,
     Apellido VARCHAR(100) NOT NULL,
     Cedula VARCHAR(20) UNIQUE NOT NULL,
-    Correo VARCHAR(100) UNIQUE NOT NULL,
+    Correo VARCHAR(100) NOT NULL,
     Contrasena VARCHAR(100) NOT NULL,
     Rol ENUM('Admin', 'Usuario') NOT NULL
 );
@@ -156,5 +156,5 @@ INSERT INTO TipoSolicitud (tipo) VALUES
 
 -- Insertar una solicitud de ejemplo
 
-INSERT INTO Solicitudes (IdUsuario, IdTipoSolicitud, Titulo, Mensaje, RutaArchivo, Estado)
-VALUES (1, 2, 'Problema de Conexion', 'Hola, recientemente he experimentado algunos problemas de conexion', NULL, 'Sin revisar');
+INSERT INTO Solicitudes (IdUsuario, IdTipoSolicitud, Titulo, Mensaje, RutaArchivo, Estado, Respuesta)
+VALUES (1, 2, 'Problema de Conexion', 'Hola, recientemente he experimentado algunos problemas de conexion', NULL, 'Sin revisar', 'No hay respuestas todavia :(');
