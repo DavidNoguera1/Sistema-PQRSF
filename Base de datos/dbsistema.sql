@@ -40,7 +40,7 @@ CREATE TABLE Solicitudes (
 
 DELIMITER //
 
-CREATE PROCEDURE crearUsuarios(
+CREATE PROCEDURE crearUsuarios(dbsistemasolicitudes
     IN p_Nombre VARCHAR(100),
     IN p_Apellido VARCHAR(100),
     IN p_Cedula VARCHAR(20),

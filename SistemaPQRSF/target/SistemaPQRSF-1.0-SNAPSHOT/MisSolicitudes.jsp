@@ -36,10 +36,11 @@
                                 <th>Archivo</th>
                                 <th>Respuesta</th>
                                 <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% 
+                            <%
                                 gestionarSistema gestionar = new gestionarSistema();
                                 // Obtain the user ID from the session
                                 String idUsuarioStr = (String) session.getAttribute("idUsuario");
@@ -53,10 +54,10 @@
                                     conn = gestionar.establecerConexion();
 
                                     // Update the SQL query to filter by idUsuario
-                                    String sql = "SELECT Titulo, Mensaje, tipo, Fecha, RutaArchivo, Respuesta, Estado " +
-                                        "FROM Solicitudes " +
-                                        "INNER JOIN TipoSolicitud ON Solicitudes.IdTipoSolicitud = TipoSolicitud.IdTipoSolicitud " +
-                                        "WHERE IdUsuario = ? ORDER BY Fecha DESC";
+                                    String sql = "SELECT Titulo, Mensaje, tipo, Fecha, RutaArchivo, Respuesta, Estado "
+                                            + "FROM Solicitudes "
+                                            + "INNER JOIN TipoSolicitud ON Solicitudes.IdTipoSolicitud = TipoSolicitud.IdTipoSolicitud "
+                                            + "WHERE IdUsuario = ? ORDER BY Fecha DESC";
 
                                     pstmt = conn.prepareStatement(sql);
                                     pstmt.setInt(1, idUsuario);
@@ -73,24 +74,41 @@
                                         String estado = rs.getString("Estado");
                             %>
                             <tr>
-                                <td><%= titulo %></td>
-                                <td><%= mensaje %></td>
-                                <td><%= tipoSolicitud %></td>
-                                <td><%= fechaSolicitud %></td>
-                                <td><%= archivo %></td>
-                                <td><%= respuesta %></td>
-                                <td><%= estado %></td>
+                                <td><%= titulo%></td>
+                                <td><%= mensaje%></td>
+                                <td><%= tipoSolicitud%></td>
+                                <td><%= fechaSolicitud%></td>
+                                <td><%= archivo%></td>
+                                <td><%= respuesta%></td>
+                                <td><%= estado%></td>
+                                <td class="text-center">
+                                    <!-- Acción con icono de bootstrap -->
+                                    <div class="acciones">
+                                        <a href="#" title="Editar" class="btn btn-success btn-sm">
+                                            <i class="fas fa-edit"></i> 
+                                        </a>
+                                        <a href="#" title="Eliminar" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> 
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
-                            <% 
+                            <%
                                     }
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 } finally {
                                     // Close the connection and resources
                                     try {
-                                        if (rs != null) rs.close();
-                                        if (pstmt != null) pstmt.close();
-                                        if (conn != null) conn.close();
+                                        if (rs != null) {
+                                            rs.close();
+                                        }
+                                        if (pstmt != null) {
+                                            pstmt.close();
+                                        }
+                                        if (conn != null) {
+                                            conn.close();
+                                        }
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }

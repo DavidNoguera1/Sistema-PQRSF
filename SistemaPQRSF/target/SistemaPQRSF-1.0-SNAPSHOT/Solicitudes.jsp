@@ -13,8 +13,8 @@
             <div class="container position-relative">
                 <div class="row d-flex justify-content-center">
                     <div class="col-lg-6 text-center">
-                        <h2>Estas son sus solicitudes</h2>
-                        <p>Observe su información</p>
+                        <h2>Estas son todas solicitudes</h2>
+                        <p>Por favor deles una respuesta administrador :)</p>
                     </div>
                 </div>
             </div>
@@ -37,10 +37,11 @@
                                 <th>Archivo</th>
                                 <th>Respuesta</th>
                                 <th>Estado</th>
+                                <th>Acciones</th> <!-- Nuevo campo de acciones -->
                             </tr>
                         </thead>
                         <tbody>
-                            <% 
+                            <%
                                 gestionarSistema gestionar = new gestionarSistema();
                                 Connection conn = null;
                                 PreparedStatement pstmt = null;
@@ -49,10 +50,10 @@
                                 try {
                                     conn = gestionar.establecerConexion();
 
-                                    String sql = "SELECT s.Titulo, s.Mensaje, u.Nombre AS NombreUsuario, ts.tipo, s.Fecha, s.RutaArchivo, s.Respuesta, s.Estado " +
-                                                 "FROM Solicitudes s " +
-                                                 "INNER JOIN Usuarios u ON s.IdUsuario = u.IdUsuario " +
-                                                 "INNER JOIN TipoSolicitud ts ON s.IdTipoSolicitud = ts.IdTipoSolicitud";
+                                    String sql = "SELECT s.Titulo, s.Mensaje, u.Nombre AS NombreUsuario, ts.tipo, s.Fecha, s.RutaArchivo, s.Respuesta, s.Estado "
+                                            + "FROM Solicitudes s "
+                                            + "INNER JOIN Usuarios u ON s.IdUsuario = u.IdUsuario "
+                                            + "INNER JOIN TipoSolicitud ts ON s.IdTipoSolicitud = ts.IdTipoSolicitud";
 
                                     pstmt = conn.prepareStatement(sql);
                                     rs = pstmt.executeQuery();
@@ -68,24 +69,38 @@
                                         String estado = rs.getString("Estado");
                             %>
                             <tr>
-                                <td><%= nombreUsuario %></td>
-                                <td><%= titulo %></td>
-                                <td><%= mensaje %></td>
-                                <td><%= tipoSolicitud %></td>
-                                <td><%= fechaSolicitud %></td>
-                                <td><%= archivo %></td>
-                                <td><%= respuesta %></td>
-                                <td><%= estado %></td>
+                                <td><%= nombreUsuario%></td>
+                                <td><%= titulo%></td>
+                                <td><%= mensaje%></td>
+                                <td><%= tipoSolicitud%></td>
+                                <td><%= fechaSolicitud%></td>
+                                <td><%= archivo%></td>
+                                <td><%= respuesta%></td>
+                                <td><%= estado%></td>
+                                <td class="text-center">
+                                    <!-- Acción con icono de bootstrap -->
+                                    <div class="acciones">
+                                        <a href="#" title="Dar respuesta" class="btn btn-success btn-sm">
+                                            <i class="bi bi-chat-right-text"></i> 
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
-                            <% 
+                            <%
                                     }
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 } finally {
                                     try {
-                                        if (rs != null) rs.close();
-                                        if (pstmt != null) pstmt.close();
-                                        if (conn != null) conn.close();
+                                        if (rs != null) {
+                                            rs.close();
+                                        }
+                                        if (pstmt != null) {
+                                            pstmt.close();
+                                        }
+                                        if (conn != null) {
+                                            conn.close();
+                                        }
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
@@ -93,6 +108,7 @@
                             %>
                         </tbody>
                     </table>
+
 
                 </div>
             </div>
