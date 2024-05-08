@@ -28,7 +28,7 @@
             <div class="row gy-4 mt-4">
                 <div class="col-lg-8 offset-lg-2"> <!-- Añadido el offset para centrar el formulario -->
 
-                    <form action="SvSolicitud" method="post" role="form">
+                    <form action="SvSolicitud" method="post" role="form" enctype="multipart/form-data">
 
                         <!-- Campo de título de la solicitud -->
                         <div class="form-group mt-3">

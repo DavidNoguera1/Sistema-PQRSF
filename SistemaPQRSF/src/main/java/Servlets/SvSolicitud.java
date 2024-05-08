@@ -5,23 +5,33 @@
 package Servlets;
 
 import com.mycompany.sistemapqrsf.gestionarSolicitud;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author PC
  */
 @WebServlet(name = "SvSolicitud", urlPatterns = {"/SvSolicitud"})
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+                 maxFileSize = 1024 * 1024 * 10,      // 10MB
+                 maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class SvSolicitud extends HttpServlet {
 
     
@@ -42,11 +52,38 @@ public class SvSolicitud extends HttpServlet {
         String mensaje = request.getParameter("mensaje");
         int tipoSolicitud = Integer.parseInt(request.getParameter("tipoSolicitud"));
         int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-        LocalDateTime fechaSolicitud = LocalDateTime.now();
-        String rutaArchivo = ""; // Aquí puedes agregar lógica para manejar el archivo adjunto si es necesario
+        LocalDateTime fechaSolicitud = LocalDateTime.now();       
+        
+        Part filePart = request.getPart("archivoAdjunto");
+
+        // Obtener el nombre del archivo
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+        
+        // Guardar el archivo en la carpeta "archivos"
+        String uploadPath = getServletContext().getRealPath("") + File.separator + "archivos";
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+        String filePath = uploadPath + File.separator + fileName;
+        try (InputStream fileContent = filePart.getInputStream()) {
+            Files.copy(fileContent, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        // Ruta del archivo (ruta relativa)
+        String pdf = File.separator + fileName;
+        
+        
+        System.out.println("=====================================================================================================================");
+        System.out.println("titulo" + titulo);
+        System.out.println("mensaje" + mensaje);
+        System.out.println("tipo Solicitud" + tipoSolicitud);
+        System.out.println("nombre pdf" + pdf);
+        System.out.println("fecha Solicitud" + fechaSolicitud);
+        System.out.println("=====================================================================================================================");
         
         // Insertar la solicitud en la base de datos
-        gestionarSolicitud.crearSolicitud(idUsuario, tipoSolicitud, titulo, mensaje, rutaArchivo, fechaSolicitud);
+        gestionarSolicitud.crearSolicitud(idUsuario, tipoSolicitud, titulo, mensaje, pdf, fechaSolicitud);
         
         // Redirigir a una página de confirmación o a donde sea necesario
         response.sendRedirect("MisSolicitudes.jsp"); 

@@ -49,6 +49,50 @@ public class gestionarSolicitud {
             }
         }
     }
+    
+    public static void borrarSolicitud(int idSolicitud) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            // Obtener conexión a la base de datos desde la clase gestionarSistema
+            conn = gestionarSistema.establecerConexion();
+            
+            // Definir la consulta SQL con el procedimiento almacenado
+            String sql = "CALL borrarSolicitud(?)";
+            
+            // Crear una declaración preparada con la consulta
+            pstmt = conn.prepareStatement(sql);
+            
+            // Establecer el parámetro ID de la solicitud
+            pstmt.setInt(1, idSolicitud);
+            
+            // Ejecutar el procedimiento almacenado
+            pstmt.executeUpdate();
+            
+            // La solicitud ha sido borrada exitosamente
+            System.out.println("La solicitud ha sido borrada exitosamente.");
+        } catch (SQLException e) {
+            // Manejar cualquier excepción SQL
+            e.printStackTrace();
+        } finally {
+            // Cerrar la conexión y liberar los recursos
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
 
 

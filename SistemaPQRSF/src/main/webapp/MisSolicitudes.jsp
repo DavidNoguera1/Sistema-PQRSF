@@ -54,7 +54,7 @@
                                     conn = gestionar.establecerConexion();
 
                                     // Update the SQL query to filter by idUsuario
-                                    String sql = "SELECT Titulo, Mensaje, tipo, Fecha, RutaArchivo, Respuesta, Estado "
+                                    String sql = "SELECT IdSolicitud, Titulo, Mensaje, tipo, Fecha, RutaArchivo, Respuesta, Estado "
                                             + "FROM Solicitudes "
                                             + "INNER JOIN TipoSolicitud ON Solicitudes.IdTipoSolicitud = TipoSolicitud.IdTipoSolicitud "
                                             + "WHERE IdUsuario = ? ORDER BY Fecha DESC";
@@ -65,6 +65,7 @@
 
                                     // Iterate through the result set and display each inquiry in the table
                                     while (rs.next()) {
+                                        String IdSolicitud = rs.getString("IdSolicitud");
                                         String titulo = rs.getString("Titulo");
                                         String mensaje = rs.getString("Mensaje");
                                         String tipoSolicitud = rs.getString("tipo");
@@ -78,7 +79,19 @@
                                 <td><%= mensaje%></td>
                                 <td><%= tipoSolicitud%></td>
                                 <td><%= fechaSolicitud%></td>
-                                <td><%= archivo%></td>
+                                <td>
+                                    <% if (archivo != null) {%>
+                                    <a href="archivos/<%= archivo%>" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-file-download"></i> Abrir PDF
+                                    </a>
+                                    <% } else { %>
+                                    <!-- Botón deshabilitado si archivo es null -->
+                                    <button class="btn btn-primary" disabled>
+                                        <i class="fas fa-file-download"></i> Abrir PDF
+                                    </button>
+                                    <% }%>
+                                </td>
+
                                 <td><%= respuesta%></td>
                                 <td><%= estado%></td>
                                 <td class="text-center">
@@ -87,9 +100,10 @@
                                         <a href="#" title="Editar" class="btn btn-success btn-sm">
                                             <i class="fas fa-edit"></i> 
                                         </a>
-                                        <a href="#" title="Eliminar" class="btn btn-danger btn-sm">
+                                        <a href="#" title="Eliminar" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmacionEliminarModal" onclick="setearIdSolicitud(<%= IdSolicitud %>);">
                                             <i class="fas fa-trash"></i> 
                                         </a>
+
                                     </div>
                                 </td>
                             </tr>
@@ -119,11 +133,34 @@
                 </div>
             </div>
         </div>
+        
+        <div class="modal fade" id="confirmacionEliminarModal" tabindex="-1" aria-labelledby="confirmacionEliminarModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmacionEliminarModalLabel">Confirmación de Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Está seguro de que desea eliminar esta solicitud?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form id="eliminarSolicitudForm" action="SvEliminarSolicitud" method="post">
+                            <input type="hidden" id="idSolicitudEliminar" name="idSolicitud">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section><!-- End Contact Section -->
 
 </main><!-- End #main -->
 
-
-
-
-
+<script>
+    function setearIdSolicitud(idSolicitud) {
+        document.getElementById("idSolicitudEliminar").value = idSolicitud;
+    }
+</script>
