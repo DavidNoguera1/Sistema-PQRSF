@@ -30,20 +30,23 @@ import javax.servlet.http.Part;
  */
 @WebServlet(name = "SvSolicitud", urlPatterns = {"/SvSolicitud"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-                 maxFileSize = 1024 * 1024 * 10,      // 10MB
-                 maxRequestSize = 1024 * 1024 * 50)   // 50MB
+        maxFileSize = 1024 * 1024 * 10, // 10MB
+        maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class SvSolicitud extends HttpServlet {
 
-    
-
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        // Obtener el ID de la solicitud a eliminar desde los parámetros de la solicitud
+        int idSolicitud = Integer.parseInt(request.getParameter("idSolicitud"));
+
+        // Llamar al método para eliminar la solicitud
+        gestionarSolicitud.borrarSolicitud(idSolicitud);
+
+        // Redirigir a una página de confirmación o a donde sea necesario
+        response.sendRedirect("MisSolicitudes.jsp"); // Reemplaza "confirmacion.jsp" con la página que desees
     }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -52,13 +55,13 @@ public class SvSolicitud extends HttpServlet {
         String mensaje = request.getParameter("mensaje");
         int tipoSolicitud = Integer.parseInt(request.getParameter("tipoSolicitud"));
         int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-        LocalDateTime fechaSolicitud = LocalDateTime.now();       
-        
+        LocalDateTime fechaSolicitud = LocalDateTime.now();
+
         Part filePart = request.getPart("archivoAdjunto");
 
         // Obtener el nombre del archivo
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
-        
+
         // Guardar el archivo en la carpeta "archivos"
         String uploadPath = getServletContext().getRealPath("") + File.separator + "archivos";
         File uploadDir = new File(uploadPath);
@@ -72,24 +75,15 @@ public class SvSolicitud extends HttpServlet {
 
         // Ruta del archivo (ruta relativa)
         String pdf = File.separator + fileName;
-        
-        
-        System.out.println("=====================================================================================================================");
-        System.out.println("titulo" + titulo);
-        System.out.println("mensaje" + mensaje);
-        System.out.println("tipo Solicitud" + tipoSolicitud);
-        System.out.println("nombre pdf" + pdf);
-        System.out.println("fecha Solicitud" + fechaSolicitud);
-        System.out.println("=====================================================================================================================");
-        
+
+       
         // Insertar la solicitud en la base de datos
         gestionarSolicitud.crearSolicitud(idUsuario, tipoSolicitud, titulo, mensaje, pdf, fechaSolicitud);
-        
+
         // Redirigir a una página de confirmación o a donde sea necesario
-        response.sendRedirect("MisSolicitudes.jsp"); 
+        response.sendRedirect("MisSolicitudes.jsp");
     }
 
-    
     @Override
     public String getServletInfo() {
         return "Short description";

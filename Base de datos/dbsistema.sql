@@ -37,10 +37,9 @@ CREATE TABLE Solicitudes (
 
 
 /* .............Creacion de procedimientos de usuarios............ */
-
 DELIMITER //
 
-CREATE PROCEDURE crearUsuarios(dbsistemasolicitudes
+CREATE PROCEDURE crearUsuarios(
     IN p_Nombre VARCHAR(100),
     IN p_Apellido VARCHAR(100),
     IN p_Cedula VARCHAR(20),
@@ -116,11 +115,12 @@ CREATE PROCEDURE editarSolicitud(
     IN p_IdSolicitud INT,
     IN p_Titulo VARCHAR(100),
     IN p_Mensaje TEXT,
-    IN p_RutaArchivo VARCHAR(255) -- Cambiado de BLOB a VARCHAR
+    IN p_RutaArchivo VARCHAR(255),
+    IN p_IdTipoSolicitud INT
 )
 BEGIN
     UPDATE Solicitudes
-    SET Titulo = p_Titulo, Mensaje = p_Mensaje, RutaArchivo = p_RutaArchivo
+    SET Titulo = p_Titulo, Mensaje = p_Mensaje, RutaArchivo = p_RutaArchivo, IdTipoSolicitud = p_IdTipoSolicitud
     WHERE IdSolicitud = p_IdSolicitud;
 END //
 DELIMITER ;
@@ -142,8 +142,8 @@ DELIMITER ;
 
 -- Insertar un nuevo usuario o admin
 INSERT INTO Usuarios (Nombre, Apellido, Cedula, Correo, Contrasena, Rol)
-VALUES ('Juan', 'Perez', '1234567890', 'juan@example.com', 'contrasena', 'Usuario'),
-       ('Administrador', 'Gonzalez', '0987654321', 'admin@example.com', 'contrasena', 'Admin');
+VALUES ('Juan', 'Perez', '123', 'juan@example.com', '123', 'Usuario'),
+       ('Administrador', 'Gonzalez', '098', 'admin@example.com', '098', 'Admin');
 
  
  -- Insertar tipos de solicitud
@@ -157,4 +157,9 @@ INSERT INTO TipoSolicitud (tipo) VALUES
 -- Insertar una solicitud de ejemplo
 
 INSERT INTO Solicitudes (IdUsuario, IdTipoSolicitud, Titulo, Mensaje, RutaArchivo, Estado, Respuesta)
-VALUES (1, 2, 'Problema de Conexion', 'Hola, recientemente he experimentado algunos problemas de conexion', NULL, 'Sin revisar', 'No hay respuestas todavia :(');
+VALUES (1, 2, 'Problema de Conexion', 'Hola, recientemente he experimentado algunos problemas de conexion', NULL, 'Sin revisar', 'No hay respuestas todavia :('),
+	(1, 3, 'Error en la Facturación', 'Buenos días, me gustaría reportar un error en la facturación de mi cuenta.', NULL, 'Sin revisar', 'No hay respuestas todavía :('),
+    (1, 4, 'Sugerencia de Mejora', 'Hola, tengo una sugerencia para mejorar el sistema de atención al cliente.', NULL, 'Sin revisar', 'No hay respuestas todavía :('),
+    (1, 1, 'Consulta sobre un Producto', 'Quisiera hacer una consulta sobre las características de un producto en particular.', NULL, 'Sin revisar', 'No hay respuestas todavía :(');
+    
+

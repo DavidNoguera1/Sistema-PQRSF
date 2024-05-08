@@ -41,7 +41,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <%
+                            <% 
                                 gestionarSistema gestionar = new gestionarSistema();
                                 Connection conn = null;
                                 PreparedStatement pstmt = null;
@@ -50,15 +50,16 @@
                                 try {
                                     conn = gestionar.establecerConexion();
 
-                                    String sql = "SELECT s.Titulo, s.Mensaje, u.Nombre AS NombreUsuario, ts.tipo, s.Fecha, s.RutaArchivo, s.Respuesta, s.Estado "
-                                            + "FROM Solicitudes s "
-                                            + "INNER JOIN Usuarios u ON s.IdUsuario = u.IdUsuario "
-                                            + "INNER JOIN TipoSolicitud ts ON s.IdTipoSolicitud = ts.IdTipoSolicitud";
+                                    String sql = "SELECT s.IdSolicitud, s.Titulo, s.Mensaje, u.Nombre AS NombreUsuario, ts.tipo, s.Fecha, s.RutaArchivo, s.Respuesta, s.Estado " +
+                                                 "FROM Solicitudes s " +
+                                                 "INNER JOIN Usuarios u ON s.IdUsuario = u.IdUsuario " +
+                                                 "INNER JOIN TipoSolicitud ts ON s.IdTipoSolicitud = ts.IdTipoSolicitud";
 
                                     pstmt = conn.prepareStatement(sql);
                                     rs = pstmt.executeQuery();
 
                                     while (rs.next()) {
+                                        String idSolicitud = rs.getString("IdSolicitud");
                                         String titulo = rs.getString("Titulo");
                                         String mensaje = rs.getString("Mensaje");
                                         String nombreUsuario = rs.getString("NombreUsuario");
@@ -69,18 +70,29 @@
                                         String estado = rs.getString("Estado");
                             %>
                             <tr>
-                                <td><%= nombreUsuario%></td>
-                                <td><%= titulo%></td>
-                                <td><%= mensaje%></td>
-                                <td><%= tipoSolicitud%></td>
-                                <td><%= fechaSolicitud%></td>
-                                <td><%= archivo%></td>
-                                <td><%= respuesta%></td>
-                                <td><%= estado%></td>
+                                <td><%= nombreUsuario %></td>
+                                <td><%= titulo %></td>
+                                <td><%= mensaje %></td>
+                                <td><%= tipoSolicitud %></td>
+                                <td><%= fechaSolicitud %></td>
+                                <td>
+                                    <% if (archivo != null) { %>
+                                    <a href="archivos/<%= archivo %>" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-file-download"></i> Abrir PDF
+                                    </a>
+                                    <% } else { %>
+                                    <!-- Botón deshabilitado si archivo es null -->
+                                    <button class="btn btn-primary" disabled>
+                                        <i class="fas fa-file-download"></i> Abrir PDF
+                                    </button>
+                                    <% } %>
+                                </td>
+                                <td><%= respuesta %></td>
+                                <td><%= estado %></td>
                                 <td class="text-center">
                                     <!-- Acción con icono de bootstrap -->
                                     <div class="acciones">
-                                        <a href="#" title="Dar respuesta" class="btn btn-success btn-sm">
+                                        <a href="#" title="Dar respuesta" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#respuestaModal" data-idsolicitud="<%= idSolicitud %>">
                                             <i class="bi bi-chat-right-text"></i> 
                                         </a>
                                     </div>
@@ -108,11 +120,49 @@
                             %>
                         </tbody>
                     </table>
-
-
                 </div>
             </div>
         </div>
+        <!-- Modal para dar respuesta -->
+        <div class="modal fade" id="respuestaModal" tabindex="-1" aria-labelledby="respuestaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="respuestaModalLabel">Responder Solicitud</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="SvRespuesta" method="POST" id="respuestaForm">
+                            <div class="mb-3">
+                                <label for="respuesta" class="form-label">Respuesta:</label>
+                                <textarea class="form-control" id="respuesta" name="respuesta" rows="3" required></textarea>
+                            </div>
+                            <!-- Campo oculto para enviar el ID de la solicitud -->
+                            <input type="hidden" id="idSolicitudInput" name="idSolicitud">
+                            <!-- Campo oculto para cambiar el estado de la solicitud a "Revisado" -->
+                            <input type="hidden" id="estadoInput" name="estado" value="Revisado">
+                            <button type="submit" class="btn btn-primary">Enviar respuesta</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Capturar el evento de clic en el botón de respuesta
+            $('.acciones .btn-success').click(function () {
+                // Obtener los datos de la solicitud seleccionada
+                var idSolicitud = $(this).data('idsolicitud');
+
+                // Poner el ID de la solicitud en el campo oculto del formulario
+                $('#idSolicitudInput').val(idSolicitud);
+
+                // Mostrar el modal de respuesta
+                $('#respuestaModal').modal('show');
+            });
+        </script>
+
+
     </section><!-- End Contact Section -->
 
 </main><!-- End #main -->

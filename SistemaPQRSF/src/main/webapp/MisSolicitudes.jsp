@@ -97,7 +97,12 @@
                                 <td class="text-center">
                                     <!-- Acción con icono de bootstrap -->
                                     <div class="acciones">
-                                        <a href="#" title="Editar" class="btn btn-success btn-sm">
+                                        <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" title="Editar"
+                                           data-idsolicitud="<%= IdSolicitud %>"
+                                           data-titulo="<%= titulo %>"
+                                           data-mensaje="<%= mensaje %>"
+                                           data-rutaarchivo="<%= archivo %>"
+                                           data-idtiposolicitud="<%= tipoSolicitud %>">
                                             <i class="fas fa-edit"></i> 
                                         </a>
                                         <a href="#" title="Eliminar" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmacionEliminarModal" onclick="setearIdSolicitud(<%= IdSolicitud %>);">
@@ -133,34 +138,11 @@
                 </div>
             </div>
         </div>
+
         
-        <div class="modal fade" id="confirmacionEliminarModal" tabindex="-1" aria-labelledby="confirmacionEliminarModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmacionEliminarModalLabel">Confirmación de Eliminación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Está seguro de que desea eliminar esta solicitud?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <form id="eliminarSolicitudForm" action="SvEliminarSolicitud" method="post">
-                            <input type="hidden" id="idSolicitudEliminar" name="idSolicitud">
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <%@include file= "templates/modalesScripts.jsp" %>
 
     </section><!-- End Contact Section -->
 
 </main><!-- End #main -->
 
-<script>
-    function setearIdSolicitud(idSolicitud) {
-        document.getElementById("idSolicitudEliminar").value = idSolicitud;
-    }
-</script>
