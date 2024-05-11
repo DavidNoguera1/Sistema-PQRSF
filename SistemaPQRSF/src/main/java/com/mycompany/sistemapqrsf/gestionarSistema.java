@@ -88,19 +88,22 @@ public class gestionarSistema {
         String[] datosUsuario = null;
 
         try {
-            String sql = "SELECT IdUsuario, Rol, Nombre FROM usuarios WHERE Cedula = ? AND Contrasena = ?";
+            String sql = "SELECT IdUsuario, Rol, Nombre, Apellido, Cedula, Correo, Contrasena FROM usuarios WHERE Cedula = ? AND Contrasena = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, cedula);
             pstmt.setString(2, contrasena);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                // Si las credenciales son válidas, obtener el id, rol y nombre del usuario
+                // Si las credenciales son válidas, obtener el id, rol, nombre, apellido, cedula, correo y contrasena del usuario
                 int idUsuario = rs.getInt("IdUsuario");
-                System.out.println("ID del usuario en sesión: " + idUsuario);
                 String rol = rs.getString("Rol");
                 String nombre = rs.getString("Nombre");
-                datosUsuario = new String[]{String.valueOf(idUsuario), rol, nombre};
+                String apellido = rs.getString("Apellido");
+                String cedulaUsuario = rs.getString("Cedula");
+                String correo = rs.getString("Correo");
+                String contrasenaUsuario = rs.getString("Contrasena");
+                datosUsuario = new String[]{String.valueOf(idUsuario), rol, nombre, apellido, cedulaUsuario, correo, contrasenaUsuario};
             }
 
             rs.close();
@@ -108,9 +111,63 @@ public class gestionarSistema {
             conn.close();
         } catch (SQLException e) {
             System.out.println("Error al iniciar sesión: " + e.getMessage());
+            datosUsuario = new String[]{"-1", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR"};
         }
 
         return datosUsuario;
+    }
+
+    public void borrarUsuario(int idUsuario) {
+        Connection conn = establecerConexion();
+        CallableStatement cs = null;
+
+        try {
+            cs = conn.prepareCall("{ call borrarUsuarios(?) }");
+            cs.setInt(1, idUsuario);
+            cs.execute();
+        } catch (SQLException e) {
+            System.out.println("Error al borrar el usuario: " + e.getMessage());
+        } finally {
+            try {
+                if (cs != null) {
+                    cs.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error al cerrar la conexión: " + ex.getMessage());
+            }
+        }
+    }
+
+    public void editarUsuario(int idUsuario, String nombre, String apellido, String cedula, String correo, String contrasena) {
+        Connection conn = establecerConexion();
+        CallableStatement cs = null;
+
+        try {
+            cs = conn.prepareCall("{ call editarUsuarios(?, ?, ?, ?, ?, ?) }");
+            cs.setInt(1, idUsuario);
+            cs.setString(2, nombre);
+            cs.setString(3, apellido);
+            cs.setString(4, cedula);
+            cs.setString(5, correo);
+            cs.setString(6, contrasena);
+            cs.execute();
+        } catch (SQLException e) {
+            System.out.println("Error al editar el usuario: " + e.getMessage());
+        } finally {
+            try {
+                if (cs != null) {
+                    cs.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error al cerrar la conexión: " + ex.getMessage());
+            }
+        }
     }
 
 }

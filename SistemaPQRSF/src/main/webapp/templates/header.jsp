@@ -82,6 +82,7 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="index.jsp">Inicio</a>
                         </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link" href="formularioS.jsp">Formulario de Atencion</a>
                         </li>
@@ -103,11 +104,17 @@
                         </li>
                         <% } %>
                         <%-- Mostrar "Cerrar Sesion" solo si hay una sesi?n activa --%>
+                        
                         <% if (session.getAttribute("rol") != null) { %>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="perfil.jsp">Perfil</a>
+                        </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link get-a-quote" href="SvLogin">Cerrar Sesion</a>
                         </li>
-                       
+                        
                         <% } else { %>
                         <%-- Mostrar "Iniciar Sesion" y "Crear Usuario" solo si no hay una sesi?n activa --%>
                         <li class="nav-item">
@@ -116,7 +123,7 @@
                         <li class="nav-item">
                             <a class="nav-link get-a-quote" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Crear Usuario</a>
                         </li>
-                        <% } %>
+                        <% }%>
 
                     </ul>
                 </div>
@@ -143,7 +150,7 @@
                                 <label class="form-label" for="cedula">Cedula</label>
                             </div>
 
-                            <!-- Contrase?a input -->
+                            <!-- Contraseña input -->
                             <div data-ds-input-init class="form-outline mb-4" required>
                                 <input type="password" id="contrasena" name="contrasena" class="form-control" />
                                 <label class="form-label" for="contrasena">Contrasena</label>

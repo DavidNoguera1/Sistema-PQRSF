@@ -25,7 +25,10 @@ public class SvRegistro extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // No es necesario implementar nada en el doGet
+        int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+        gestionar.borrarUsuario(idUsuario);
+        request.getSession().invalidate();
+        response.sendRedirect("index.jsp");
     }
 
     @Override

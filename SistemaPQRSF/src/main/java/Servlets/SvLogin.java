@@ -34,16 +34,19 @@ public class SvLogin extends HttpServlet {
         String cedula = request.getParameter("cedula");
         String contrasena = request.getParameter("contrasena");
 
-        // Verificar las credenciales del usuario y obtener el id, rol y nombre
+        // Verificar las credenciales del usuario y obtener el id, rol, nombre, apellido, cedula, correo y contrasena
         String[] datosUsuario = gestionar.iniciarSesion(cedula, contrasena);
 
         if (datosUsuario != null) {
-            // Si las credenciales son válidas, almacenar el id, rol y nombre en la sesión
+            // Si las credenciales son válidas, almacenar el id, rol, nombre, apellido, cedula, correo y contrasena en la sesión
             HttpSession session = request.getSession();
             session.setAttribute("idUsuario", datosUsuario[0]); // El id está en la posición 0
             session.setAttribute("rol", datosUsuario[1]); // El rol está en la posición 1
             session.setAttribute("nombre", datosUsuario[2]); // El nombre está en la posición 2
-
+            session.setAttribute("apellido", datosUsuario[3]); // El apellido está en la posición 3
+            session.setAttribute("cedula", datosUsuario[4]); // La cedula está en la posición 4
+            session.setAttribute("correo", datosUsuario[5]); // El correo está en la posición 5
+            session.setAttribute("contrasena", datosUsuario[6]); // La contrasena está en la posición 6
             // Redirigir a la página de inicio
             response.sendRedirect("index.jsp");
         } else {
