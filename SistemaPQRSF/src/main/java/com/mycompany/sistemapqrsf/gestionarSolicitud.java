@@ -9,6 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import com.mycompany.sistemapqrsf.gestionarSistema;
 import java.time.LocalDateTime;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class gestionarSolicitud {
 
@@ -176,4 +184,31 @@ public class gestionarSolicitud {
             }
         }
     }
+    
+    public static void enviarCorreo(String para, String asunto, String texto) throws MessagingException {
+        // Propiedades del servidor de correo
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com"); // Cambia esto por tu servidor SMTP
+        props.put("mail.smtp.port", "587"); // Cambia esto si es necesario
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        // Autenticación del correo
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("jdiegonarvaez.lol@gmail.com", "nyuk uzvp wkze liyy"); // Cambia esto por tu correo y contraseña
+            }
+        });
+
+        // Composición del correo
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress("jdiegonarvaez.lol@gmail.com")); // Cambia esto por tu correo
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(para));
+        message.setSubject(asunto);
+        message.setText(texto);
+
+        // Envío del correo
+        Transport.send(message);
+    }
+    
 }

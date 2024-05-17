@@ -41,7 +41,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% 
+                            <%
                                 gestionarSistema gestionar = new gestionarSistema();
                                 Connection conn = null;
                                 PreparedStatement pstmt = null;
@@ -50,10 +50,10 @@
                                 try {
                                     conn = gestionar.establecerConexion();
 
-                                    String sql = "SELECT s.IdSolicitud, s.Titulo, s.Mensaje, u.Nombre AS NombreUsuario, ts.tipo, s.Fecha, s.RutaArchivo, s.Respuesta, s.Estado " +
-                                                 "FROM Solicitudes s " +
-                                                 "INNER JOIN Usuarios u ON s.IdUsuario = u.IdUsuario " +
-                                                 "INNER JOIN TipoSolicitud ts ON s.IdTipoSolicitud = ts.IdTipoSolicitud";
+                                    String sql = "SELECT s.IdSolicitud, s.Titulo, s.Mensaje, u.Nombre AS NombreUsuario, u.Correo AS CorreoUsuario, ts.tipo, s.Fecha, s.RutaArchivo, s.Respuesta, s.Estado "
+                                            + "FROM Solicitudes s "
+                                            + "INNER JOIN Usuarios u ON s.IdUsuario = u.IdUsuario "
+                                            + "INNER JOIN TipoSolicitud ts ON s.IdTipoSolicitud = ts.IdTipoSolicitud";
 
                                     pstmt = conn.prepareStatement(sql);
                                     rs = pstmt.executeQuery();
@@ -68,16 +68,18 @@
                                         String archivo = rs.getString("RutaArchivo");
                                         String respuesta = rs.getString("Respuesta");
                                         String estado = rs.getString("Estado");
+
+                                        String correoUsuario = rs.getString("CorreoUsuario");
                             %>
                             <tr>
-                                <td><%= nombreUsuario %></td>
-                                <td><%= titulo %></td>
-                                <td><%= mensaje %></td>
-                                <td><%= tipoSolicitud %></td>
-                                <td><%= fechaSolicitud %></td>
+                                <td><%= nombreUsuario%></td>
+                                <td><%= titulo%></td>
+                                <td><%= mensaje%></td>
+                                <td><%= tipoSolicitud%></td>
+                                <td><%= fechaSolicitud%></td>
                                 <td>
-                                    <% if (archivo != null) { %>
-                                    <a href="archivos/<%= archivo %>" target="_blank" class="btn btn-primary">
+                                    <% if (archivo != null) {%>
+                                    <a href="archivos/<%= archivo%>" target="_blank" class="btn btn-primary">
                                         <i class="fas fa-file-download"></i> Abrir PDF
                                     </a>
                                     <% } else { %>
@@ -85,16 +87,21 @@
                                     <button class="btn btn-primary" disabled>
                                         <i class="fas fa-file-download"></i> Abrir PDF
                                     </button>
-                                    <% } %>
+                                    <% }%>
                                 </td>
-                                <td><%= respuesta %></td>
-                                <td><%= estado %></td>
+                                <td><%= respuesta%></td>
+                                <td><%= estado%></td>
                                 <td class="text-center">
-                                    <!-- Acción con icono de bootstrap -->
                                     <div class="acciones">
-                                        <a href="#" title="Dar respuesta" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#respuestaModal" data-idsolicitud="<%= idSolicitud %>">
-                                            <i class="bi bi-chat-right-text"></i> 
+                                        <% if ("Sin revisar".equals(estado)) {%>
+                                        <a href="#" title="Dar respuesta" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#respuestaModal" data-idsolicitud="<%= idSolicitud%>" data-correousuario="<%= correoUsuario%>">
+                                            <i class="bi bi-chat-right-text"></i> Dar respuesta
                                         </a>
+                                        <% } else { %>
+                                        <button class="btn btn-success btn-sm" disabled>
+                                            <i class="bi bi-chat-right-text"></i> Dar respuesta
+                                        </button>
+                                        <% } %>
                                     </div>
                                 </td>
                             </tr>
@@ -139,6 +146,8 @@
                             </div>
                             <!-- Campo oculto para enviar el ID de la solicitud -->
                             <input type="hidden" id="idSolicitudInput" name="idSolicitud">
+                            <!-- Campo oculto para enviar el correo del usuario -->
+                            <input type="hidden" id="correoUsuarioInput" name="correoUsuario">
                             <!-- Campo oculto para cambiar el estado de la solicitud a "Revisado" -->
                             <input type="hidden" id="estadoInput" name="estado" value="Revisado">
                             <button type="submit" class="btn btn-primary">Enviar respuesta</button>
@@ -150,13 +159,15 @@
 
         <script>
             // Capturar el evento de clic en el botón de respuesta
-            $('.acciones .btn-success').click(function () {
+            $('.btn-success').click(function () {
                 // Obtener los datos de la solicitud seleccionada
                 var idSolicitud = $(this).data('idsolicitud');
+                var correoUsuario = $(this).data('correousuario');
 
-                // Poner el ID de la solicitud en el campo oculto del formulario
+                // Poner el ID de la solicitud y el correo del usuario en los campos ocultos del formulario
                 $('#idSolicitudInput').val(idSolicitud);
-
+                $('#correoUsuarioInput').val(correoUsuario);
+                
                 // Mostrar el modal de respuesta
                 $('#respuestaModal').modal('show');
             });

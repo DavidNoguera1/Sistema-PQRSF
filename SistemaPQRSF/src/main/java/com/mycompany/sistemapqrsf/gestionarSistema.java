@@ -21,7 +21,7 @@ public class gestionarSistema {
     public static Connection establecerConexion() {
         String url = "jdbc:mysql://localhost:3306/dbsistema?serverTimeZone=utc";
         String user = "root"; // Nombre de usuario correcto
-        String password = "admin"; // Contraseña de tu base de datos, si la tienes
+        String password = "123456"; // Contraseña de tu base de datos, si la tienes
         Connection conn = null;
 
         try {

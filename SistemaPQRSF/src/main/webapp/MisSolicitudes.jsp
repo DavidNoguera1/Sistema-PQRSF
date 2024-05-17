@@ -97,18 +97,26 @@
                                 <td class="text-center">
                                     <!-- Acción con icono de bootstrap -->
                                     <div class="acciones">
+                                        <% if ("Sin revisar".equals(estado)) {%>
                                         <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" title="Editar"
-                                           data-idsolicitud="<%= IdSolicitud %>"
-                                           data-titulo="<%= titulo %>"
-                                           data-mensaje="<%= mensaje %>"
-                                           data-rutaarchivo="<%= archivo %>"
-                                           data-idtiposolicitud="<%= tipoSolicitud %>">
+                                           data-idsolicitud="<%= IdSolicitud%>"
+                                           data-titulo="<%= titulo%>"
+                                           data-mensaje="<%= mensaje%>"
+                                           data-rutaarchivo="<%= archivo%>"
+                                           data-idtiposolicitud="<%= tipoSolicitud%>">
                                             <i class="fas fa-edit"></i> 
                                         </a>
-                                        <a href="#" title="Eliminar" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmacionEliminarModal" onclick="setearIdSolicitud(<%= IdSolicitud %>);">
+                                        <a href="#" title="Eliminar" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmacionEliminarModal" onclick="setearIdSolicitud(<%= IdSolicitud%>);">
                                             <i class="fas fa-trash"></i> 
                                         </a>
-
+                                        <% } else { %>
+                                        <button class="btn btn-success btn-sm" disabled>
+                                            <i class="fas fa-edit"></i> 
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" disabled>
+                                            <i class="fas fa-trash"></i> 
+                                        </button>
+                                        <% } %>
                                     </div>
                                 </td>
                             </tr>
@@ -139,8 +147,8 @@
             </div>
         </div>
 
-        
-            <%@include file= "templates/modalesScripts.jsp" %>
+
+        <%@include file= "templates/modalesScripts.jsp" %>
 
     </section><!-- End Contact Section -->
 

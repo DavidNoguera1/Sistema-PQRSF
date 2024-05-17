@@ -4,6 +4,7 @@ com\mycompany\sistemapqrsf\JAXRSConfiguration.class
 com\mycompany\sistemapqrsf\resources\JavaEE8Resource.class
 Servlets\SvEditarUsuario.class
 Servlets\SvRespuesta.class
+com\mycompany\sistemapqrsf\gestionarSolicitud$1.class
 com\mycompany\sistemapqrsf\gestionarSolicitud.class
 Servlets\SvSolicitud.class
 Servlets\SvEditar.class
