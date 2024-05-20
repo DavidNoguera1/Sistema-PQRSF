@@ -59,30 +59,34 @@ public class SvSolicitud extends HttpServlet {
 
         Part filePart = request.getPart("archivoAdjunto");
 
-        // Obtener el nombre del archivo
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+        String pdf = ""; // Valor predeterminado para cuando no se sube archivo
 
-        // Guardar el archivo en la carpeta "archivos"
-        String uploadPath = getServletContext().getRealPath("") + File.separator + "archivos";
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
+        if (filePart != null && filePart.getSize() > 0) {
+            // Obtener el nombre del archivo
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+
+            // Guardar el archivo en la carpeta "archivos"
+            String uploadPath = getServletContext().getRealPath("") + File.separator + "archivos";
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+            String filePath = uploadPath + File.separator + fileName;
+            try (InputStream fileContent = filePart.getInputStream()) {
+                Files.copy(fileContent, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // Ruta del archivo (ruta relativa)
+            pdf = File.separator + fileName;
         }
-        String filePath = uploadPath + File.separator + fileName;
-        try (InputStream fileContent = filePart.getInputStream()) {
-            Files.copy(fileContent, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
-        }
 
-        // Ruta del archivo (ruta relativa)
-        String pdf = File.separator + fileName;
-
-       
         // Insertar la solicitud en la base de datos
         gestionarSolicitud.crearSolicitud(idUsuario, tipoSolicitud, titulo, mensaje, pdf, fechaSolicitud);
 
         // Redirigir a una página de confirmación o a donde sea necesario
         response.sendRedirect("MisSolicitudes.jsp");
     }
+
 
     @Override
     public String getServletInfo() {

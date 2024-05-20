@@ -78,12 +78,12 @@
                                 <td><%= tipoSolicitud%></td>
                                 <td><%= fechaSolicitud%></td>
                                 <td>
-                                    <% if (archivo != null) {%>
+                                    <% if (archivo != null && !archivo.isEmpty()) {%>
                                     <a href="archivos/<%= archivo%>" target="_blank" class="btn btn-primary">
                                         <i class="fas fa-file-download"></i> Abrir PDF
                                     </a>
                                     <% } else { %>
-                                    <!-- Botón deshabilitado si archivo es null -->
+                                    <!-- Botón deshabilitado si archivo es null o vacío -->
                                     <button class="btn btn-primary" disabled>
                                         <i class="fas fa-file-download"></i> Abrir PDF
                                     </button>
@@ -167,7 +167,7 @@
                 // Poner el ID de la solicitud y el correo del usuario en los campos ocultos del formulario
                 $('#idSolicitudInput').val(idSolicitud);
                 $('#correoUsuarioInput').val(correoUsuario);
-                
+
                 // Mostrar el modal de respuesta
                 $('#respuestaModal').modal('show');
             });
