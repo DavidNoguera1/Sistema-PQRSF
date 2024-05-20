@@ -1,0 +1,24 @@
+Laboratorio final - PQRS
+
+Nombres: David Noguera y Juan Diego Arevalo
+
+Link Repo: https://github.com/DavidNoguera1/Sistema-PQRSF.git
+
+------------------------------------------------------------------------
+
+Administrador que responde
+
+Cedula: 098
+
+Contraseña: 098
+
+Correo: jdiegonarvaez.lol@gmail.com  --Este es el correo que manda las respuestas
+
+
+---------------------------------------------------------------------------
+
+Otro correo y contrseña que puede reemplazar en  "gestionarSolicitud.enviarCorreo"
+
+Correo: cecilceil110@gmail.com
+
+Contraseña: kmdt zxvv qvsb jiyk

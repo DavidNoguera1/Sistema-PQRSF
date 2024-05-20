@@ -142,8 +142,8 @@ DELIMITER ;
 
 -- Insertar un nuevo usuario o admin
 INSERT INTO Usuarios (Nombre, Apellido, Cedula, Correo, Contrasena, Rol)
-VALUES ('Juan', 'Perez', '123', 'juan@example.com', '123', 'Usuario'),
-       ('Administrador', 'Gonzalez', '098', 'admin@example.com', '098', 'Admin');
+VALUES ('Juan', 'Perez', '123', 'davidnoguera0912@gmail.com', '123', 'Usuario'),
+       ('Administrador', 'Gonzalez', '098', 'jdiegonarvaez.lol@gmail.com', '098', 'Admin');
 
  
  -- Insertar tipos de solicitud
